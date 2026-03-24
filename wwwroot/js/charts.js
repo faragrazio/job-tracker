@@ -3,8 +3,14 @@
 /// Palette colori allineata alle CSS variables del tema SaaS.
 /// </summary>
 
-// Colori coerenti con le classi badge-stato nel CSS
-var COLORI_STATO = ['#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#10b981'];
+// Mappa colori per stato — ogni stato ha il suo colore fisso
+var MAPPA_COLORI = {
+    'Inviata': '#3b82f6',
+    'Visualizzata': '#8b5cf6',
+    'Colloquio': '#f59e0b',
+    'Rifiutata': '#ef4444',
+    'Offerta': '#10b981'
+};
 
 // ==================== GRAFICO DONUT: DISTRIBUZIONE PER STATO ====================
 function caricaGraficoStato() {
@@ -50,10 +56,15 @@ function caricaGraficoStato() {
                         }
                     }
                 },
-                colors: COLORI_STATO,
                 series: [{
                     name: 'Candidature',
-                    data: data.perStato
+                    data: data.perStato.map(function (item) {
+                        return {
+                            name: item.name,
+                            y: item.y,
+                            color: MAPPA_COLORI[item.name] || '#94a3b8'
+                        };
+                    })
                 }],
                 tooltip: {
                     style: { fontSize: '13px' },

@@ -184,6 +184,29 @@ else
     </div>
 }
 
+<!-- ==================== MODAL CONFERMA ELIMINAZIONE ==================== -->
+<div class="modal fade" id="modalElimina" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: none; border-radius: 16px; overflow: hidden;">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #ef4444, #f87171); border: none;">
+                <h6 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Conferma eliminazione
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="mb-0">Sei sicuro di voler eliminare la candidatura per <strong id="nomeAziendaModal"></strong>?</p>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid var(--border-light);">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-danger btn-sm" id="btnConfermaElimina">
+                    <i class="bi bi-trash"></i> Elimina
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.1/highcharts.min.js"></script>
     <script src="~/js/charts.js" asp-append-version="true"></script>
