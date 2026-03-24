@@ -1,100 +1,133 @@
 @model JobTracker.Models.Candidatura
+
 @{
-    ViewData["Title"] = "Modifica Candidatura";
+    ViewData["Title"] = "Modifica candidatura";
 }
 
-<div class="container py-4" style="max-width:700px">
-    <div class="d-flex align-items-center mb-4 gap-3">
-        <a asp-action="Index" class="btn btn-outline-secondary">← Indietro</a>
-        <h3 class="mb-0 fw-bold">✏️ Modifica — @Model.Azienda</h3>
-    </div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-pencil"></i> Modifica candidatura</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-4">
-            <form asp-action="Edit" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="Id" />
-                <input type="hidden" asp-for="CreatedAt" />
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label asp-for="Azienda" class="form-label fw-semibold"></label>
-                        <input asp-for="Azienda" class="form-control">
-                        <span asp-validation-for="Azienda" class="text-danger small"></span>
+                    <!-- Campo nascosto per l'ID — serve al Controller per identificare la candidatura -->
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- Riga 1: Azienda + Ruolo -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Azienda" class="form-label">Azienda *</label>
+                            <input asp-for="Azienda" class="form-control">
+                            <span asp-validation-for="Azienda" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Ruolo" class="form-label">Ruolo *</label>
+                            <input asp-for="Ruolo" class="form-control">
+                            <span asp-validation-for="Ruolo" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="Ruolo" class="form-label fw-semibold"></label>
-                        <input asp-for="Ruolo" class="form-control">
-                        <span asp-validation-for="Ruolo" class="text-danger small"></span>
+
+                    <!-- Riga 2: Città + Modalità -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Citta" class="form-label">Città</label>
+                            <input asp-for="Citta" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Modalita" class="form-label">Modalità</label>
+                            <select asp-for="Modalita" class="form-select">
+                                <option value="">Seleziona...</option>
+                                <option value="In sede">In sede</option>
+                                <option value="Ibrido">Ibrido</option>
+                                <option value="Full remote">Full remote</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="Citta" class="form-label fw-semibold"></label>
-                        <input asp-for="Citta" class="form-control">
+
+                    <!-- Riga 3: Fonte + Data candidatura -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Fonte" class="form-label">Fonte</label>
+                            <select asp-for="Fonte" class="form-select">
+                                <option value="">Seleziona...</option>
+                                <option value="LinkedIn">LinkedIn</option>
+                                <option value="Indeed">Indeed</option>
+                                <option value="Sito aziendale">Sito aziendale</option>
+                                <option value="Agenzia">Agenzia</option>
+                                <option value="Passaparola">Passaparola</option>
+                                <option value="Altro">Altro</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DataCandidatura" class="form-label">Data candidatura *</label>
+                            <input asp-for="DataCandidatura" type="date" class="form-control">
+                            <span asp-validation-for="DataCandidatura" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="Modalita" class="form-label fw-semibold"></label>
-                        <select asp-for="Modalita" class="form-select">
-                            <option value="">-- Seleziona --</option>
-                            <option>Remoto</option>
-                            <option>Ibrido</option>
-                            <option>In sede</option>
-                        </select>
+
+                    <!-- Riga 4: Stato + RAL -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Stato" class="form-label">Stato</label>
+                            <select asp-for="Stato" class="form-select">
+                                <option value="Inviata">Inviata</option>
+                                <option value="Visualizzata">Visualizzata</option>
+                                <option value="Colloquio">Colloquio</option>
+                                <option value="Rifiutata">Rifiutata</option>
+                                <option value="Offerta">Offerta</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="RALIndicata" class="form-label">RAL indicata</label>
+                            <input asp-for="RALIndicata" class="form-control">
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="Fonte" class="form-label fw-semibold"></label>
-                        <select asp-for="Fonte" class="form-select">
-                            <option value="">-- Seleziona --</option>
-                            <option>LinkedIn</option>
-                            <option>Indeed</option>
-                            <option>Glassdoor</option>
-                            <option>Sito aziendale</option>
-                            <option>Altro</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label asp-for="DataCandidatura" class="form-label fw-semibold"></label>
-                        <input asp-for="DataCandidatura" class="form-control" type="date">
-                    </div>
-                    <div class="col-md-6">
-                        <label asp-for="Stato" class="form-label fw-semibold"></label>
-                        <select asp-for="Stato" class="form-select">
-                            <option>Inviata</option>
-                            <option>CV Visualizzato</option>
-                            <option>Colloquio</option>
-                            <option>Offerta</option>
-                            <option>Rifiutata</option>
-                            <option>Chiusa</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label asp-for="RALIndicata" class="form-label fw-semibold"></label>
-                        <input asp-for="RALIndicata" class="form-control">
-                    </div>
-                    <div class="col-12">
-                        <label asp-for="StackRichiesto" class="form-label fw-semibold"></label>
+
+                    <!-- Riga 5: Stack richiesto -->
+                    <div class="mb-3">
+                        <label asp-for="StackRichiesto" class="form-label">Stack richiesto</label>
                         <input asp-for="StackRichiesto" class="form-control">
                     </div>
-                    <div class="col-12">
-                        <label asp-for="LinkOfferta" class="form-label fw-semibold"></label>
-                        <input asp-for="LinkOfferta" class="form-control">
+
+                    <!-- Riga 6: Link offerta -->
+                    <div class="mb-3">
+                        <label asp-for="LinkOfferta" class="form-label">Link offerta</label>
+                        <input asp-for="LinkOfferta" type="url" class="form-control">
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="DataRisposta" class="form-label fw-semibold"></label>
-                        <input asp-for="DataRisposta" class="form-control" type="date">
+
+                    <!-- Riga 7: Date risposta e colloquio -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="DataRisposta" class="form-label">Data risposta</label>
+                            <input asp-for="DataRisposta" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DataColloquio" class="form-label">Data colloquio</label>
+                            <input asp-for="DataColloquio" type="date" class="form-control">
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="DataColloquio" class="form-label fw-semibold"></label>
-                        <input asp-for="DataColloquio" class="form-control" type="date">
-                    </div>
-                    <div class="col-12">
-                        <label asp-for="Note" class="form-label fw-semibold"></label>
+
+                    <!-- Riga 8: Note -->
+                    <div class="mb-3">
+                        <label asp-for="Note" class="form-label">Note</label>
                         <textarea asp-for="Note" class="form-control" rows="3"></textarea>
                     </div>
-                    <div class="col-12 d-flex gap-2 pt-2">
-                        <button type="submit" class="btn btn-primary px-4">💾 Salva</button>
-                        <a asp-action="Index" class="btn btn-outline-secondary">Annulla</a>
+
+                    <!-- Pulsanti -->
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Torna alla lista
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-check-lg"></i> Salva modifiche
+                        </button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>

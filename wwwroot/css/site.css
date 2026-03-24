@@ -1,22 +1,164 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+/* ==================== LAYOUT GENERALE ==================== */
 
 html {
-  position: relative;
-  min-height: 100%;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #f5f6fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ==================== NAVBAR ==================== */
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+/* ==================== CARD DASHBOARD ==================== */
+
+.card-dashboard {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-dashboard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-dashboard .card-body {
+    padding: 1.2rem;
+}
+
+.card-dashboard h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.card-dashboard h5 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+}
+
+/* ==================== FILTRI ==================== */
+
+.card-filtri {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: white;
+}
+
+/* ==================== TABELLA ==================== */
+
+.table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table td {
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #eef2ff;
+}
+
+/* ==================== BADGE STATO ==================== */
+
+.badge {
+    font-size: 0.78rem;
+    padding: 0.4em 0.8em;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* ==================== GRAFICI ==================== */
+
+.card-grafico {
+    border: none;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.card-grafico .card-header {
+    background: transparent;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* ==================== FORM ==================== */
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #495057;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.15);
+}
+
+/* ==================== PULSANTI AZIONE TABELLA ==================== */
+
+.btn-azioni {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    margin-left: 2px;
+}
+
+/* ==================== CARD TABELLA ==================== */
+
+.card-tabella {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ==================== FOOTER ==================== */
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+/* ==================== ALERT SUCCESSO ==================== */
+
+.alert-success {
+    border-radius: 8px;
+    border-left: 4px solid #198754;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    .card-dashboard h2 {
+        font-size: 1.5rem;
+    }
+
+    .card-dashboard h5 {
+        font-size: 0.75rem;
+    }
+
+    .btn-azioni {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
+    }
 }

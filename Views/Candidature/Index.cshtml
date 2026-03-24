@@ -1,151 +1,193 @@
-@model IEnumerable<JobTracker.Models.Candidatura>
+@model List<JobTracker.Models.Candidatura>
+
 @{
-    ViewData["Title"] = "Le mie Candidature";
+    ViewData["Title"] = "Le mie candidature";
 }
 
-<div class="container-fluid py-4">
-    
-    <!-- Header con statistiche -->
-    <div class="row mb-4">
-        <div class="col-12 d-flex justify-content-between align-items-center">
-            <h2 class="fw-bold text-dark">🎯 Job Tracker</h2>
-            <a asp-action="Create" class="btn btn-primary px-4">
-                <i class="bi bi-plus-lg"></i> Nuova Candidatura
-            </a>
-        </div>
-    </div>
-
-    <!-- Cards statistiche -->
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm text-center py-3">
-                <div class="fs-1 fw-bold text-primary">@ViewBag.Totale</div>
-                <div class="text-muted small">Totale</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm text-center py-3">
-                <div class="fs-1 fw-bold text-info">@ViewBag.Inviate</div>
-                <div class="text-muted small">Inviate</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm text-center py-3">
-                <div class="fs-1 fw-bold text-success">@ViewBag.Colloqui</div>
-                <div class="text-muted small">Colloqui</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm text-center py-3">
-                <div class="fs-1 fw-bold text-danger">@ViewBag.Rifiutate</div>
-                <div class="text-muted small">Rifiutate</div>
+<!-- ==================== CARD RIASSUNTIVE DASHBOARD ==================== -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card card-dashboard text-white bg-primary">
+            <div class="card-body text-center">
+                <h5 class="card-title">Totali</h5>
+                <h2>@ViewBag.Totale</h2>
             </div>
         </div>
     </div>
-
-    <!-- Messaggio successo -->
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            ✅ @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
-    <!-- Filtri -->
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body">
-            <form method="get" class="row g-2 align-items-end">
-                <div class="col-md-5">
-                    <label class="form-label small text-muted">Cerca azienda o ruolo</label>
-                    <input type="text" name="cerca" value="@ViewBag.Cerca" 
-                           class="form-control" placeholder="es. Microsoft, Developer...">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small text-muted">Filtra per stato</label>
-                    <select name="stato" class="form-select">
-                        <option value="">Tutti gli stati</option>
-                        @foreach (var s in new[] { "Inviata", "CV Visualizzato", "Colloquio", "Offerta", "Rifiutata", "Chiusa" })
-                        {
-                            <option value="@s" selected="@(ViewBag.Stato == s)">@s</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary flex-fill">Filtra</button>
-                    <a asp-action="Index" class="btn btn-outline-secondary flex-fill">Reset</a>
-                </div>
-            </form>
+    <div class="col-6 col-md-3">
+        <div class="card card-dashboard text-white bg-info">
+            <div class="card-body text-center">
+                <h5 class="card-title">Inviate</h5>
+                <h2>@ViewBag.Inviate</h2>
+            </div>
         </div>
     </div>
-
-    <!-- Tabella candidature -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-0">
-            @if (!Model.Any())
-            {
-                <div class="text-center py-5 text-muted">
-                    <div class="fs-1">📭</div>
-                    <p>Nessuna candidatura trovata.</p>
-                    <a asp-action="Create" class="btn btn-primary">Aggiungi la prima</a>
-                </div>
-            }
-            else
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Azienda</th>
-                                <th>Ruolo</th>
-                                <th>Città</th>
-                                <th>Modalità</th>
-                                <th>Data</th>
-                                <th>Stato</th>
-                                <th>Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var c in Model)
-                            {
-                                <tr>
-                                    <td class="fw-semibold">@c.Azienda</td>
-                                    <td>@c.Ruolo</td>
-                                    <td>@c.Citta</td>
-                                    <td>@c.Modalita</td>
-                                    <td>@c.DataCandidatura.ToString("dd/MM/yyyy")</td>
-                                    <td>
-                                        @{
-                                            var badgeClass = c.Stato switch {
-                                                "Inviata" => "bg-primary",
-                                                "CV Visualizzato" => "bg-warning text-dark",
-                                                "Colloquio" => "bg-success",
-                                                "Offerta" => "bg-info text-dark",
-                                                "Rifiutata" => "bg-danger",
-                                                "Chiusa" => "bg-secondary",
-                                                _ => "bg-secondary"
-                                            };
-                                        }
-                                        <span class="badge @badgeClass">@c.Stato</span>
-                                    </td>
-                                    <td>
-                                        <a asp-action="Details" asp-route-id="@c.Id" 
-                                           class="btn btn-sm btn-outline-secondary">👁</a>
-                                        <a asp-action="Edit" asp-route-id="@c.Id" 
-                                           class="btn btn-sm btn-outline-primary">✏️</a>
-                                        <form asp-action="Delete" asp-route-id="@c.Id" 
-                                              method="post" class="d-inline"
-                                              onsubmit="return confirm('Eliminare questa candidatura?')">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">🗑</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
+    <div class="col-6 col-md-3">
+        <div class="card card-dashboard text-white bg-warning">
+            <div class="card-body text-center">
+                <h5 class="card-title">Colloqui</h5>
+                <h2>@ViewBag.Colloqui</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card card-dashboard text-white bg-danger">
+            <div class="card-body text-center">
+                <h5 class="card-title">Rifiutate</h5>
+                <h2>@ViewBag.Rifiutate</h2>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- ==================== GRAFICI HIGHCHARTS ==================== -->
+<div class="row g-3 mb-4">
+    <div class="col-md-5">
+        <div class="card card-grafico">
+            <div class="card-header">
+                <i class="bi bi-pie-chart-fill"></i> Distribuzione per stato
+            </div>
+            <div class="card-body">
+                <div id="chart-stato" style="height: 280px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card card-grafico">
+            <div class="card-header">
+                <i class="bi bi-graph-up"></i> Candidature nel tempo
+            </div>
+            <div class="card-body">
+                <div id="chart-tempo" style="height: 280px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== FILTRI E RICERCA ==================== -->
+<div class="card card-filtri mb-4">
+    <div class="card-body py-3">
+        <form method="get" asp-action="Index" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Filtra per stato</label>
+                <select name="stato" class="form-select form-select-sm">
+                    <option value="">Tutti gli stati</option>
+                    <option value="Inviata" selected="@(ViewBag.Stato == "Inviata")">Inviata</option>
+                    <option value="Visualizzata" selected="@(ViewBag.Stato == "Visualizzata")">Visualizzata</option>
+                    <option value="Colloquio" selected="@(ViewBag.Stato == "Colloquio")">Colloquio</option>
+                    <option value="Rifiutata" selected="@(ViewBag.Stato == "Rifiutata")">Rifiutata</option>
+                    <option value="Offerta" selected="@(ViewBag.Stato == "Offerta")">Offerta</option>
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label class="form-label">Cerca per azienda o ruolo</label>
+                <input type="text" name="cerca" class="form-control form-control-sm"
+                       value="@ViewBag.Cerca" placeholder="Es. Microsoft, Backend Developer...">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary btn-sm me-2">
+                    <i class="bi bi-search"></i> Filtra
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==================== MESSAGGIO DI SUCCESSO ==================== -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- ==================== PULSANTE AGGIUNGI + TABELLA ==================== -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Lista candidature</h5>
+    <a asp-action="Create" class="btn btn-success btn-sm">
+        <i class="bi bi-plus-lg"></i> Nuova candidatura
+    </a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        Nessuna candidatura trovata. Clicca "Nuova candidatura" per aggiungerne una.
+    </div>
+}
+else
+{
+    <div class="card card-tabella">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Azienda</th>
+                        <th>Ruolo</th>
+                        <th>Città</th>
+                        <th>Modalità</th>
+                        <th>Data</th>
+                        <th>Stato</th>
+                        <th class="text-end">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model)
+                    {
+                        <tr id="row-@c.Id">
+                            <td><strong>@c.Azienda</strong></td>
+                            <td>@c.Ruolo</td>
+                            <td>@c.Citta</td>
+                            <td>@c.Modalita</td>
+                            <td>@c.DataCandidatura.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @{
+                                    var badgeClass = c.Stato switch
+                                    {
+                                        "Inviata" => "bg-info",
+                                        "Visualizzata" => "bg-secondary",
+                                        "Colloquio" => "bg-warning text-dark",
+                                        "Rifiutata" => "bg-danger",
+                                        "Offerta" => "bg-success",
+                                        _ => "bg-light text-dark"
+                                    };
+                                }
+                                <span class="badge @badgeClass">@c.Stato</span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@c.Id"
+                                   class="btn btn-sm btn-outline-primary btn-azioni" title="Dettagli">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@c.Id"
+                                   class="btn btn-sm btn-outline-warning btn-azioni" title="Modifica">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-azioni"
+                                        title="Elimina"
+                                        onclick="eliminaCandidatura(@c.Id, '@c.Azienda')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<!-- ==================== SCRIPT ==================== -->
+@section Scripts {
+    <!-- Highcharts CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.1/highcharts.min.js"></script>
+
+    <!-- File JS del progetto -->
+    <script src="~/js/charts.js" asp-append-version="true"></script>
+    <script src="~/js/candidature.js" asp-append-version="true"></script>
+
+    <!-- Token CSRF per le chiamate AJAX -->
+    @Html.AntiForgeryToken()
+}

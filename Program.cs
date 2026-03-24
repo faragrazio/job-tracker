@@ -1,18 +1,29 @@
 using JobTracker.Models;
+using JobTracker.Repositories;
+using JobTracker.UseCases;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Legge la stringa di connessione da appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Registra il DbContext con MySQL — principio D di SOLID:
-// il Controller non crea il DbContext, lo riceve dall'esterno
+// Registra il DbContext con MySQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 );
 
-// Aggiunge il supporto per Controller e Views (pattern MVC)
+// Registra il Repository — layer di accesso ai dati
+builder.Services.AddScoped<ICandidaturaRepository, CandidaturaRepository>();
+
+// Registra gli UseCases — layer di logica business
+builder.Services.AddScoped<GetAllCandidatureUseCase>();
+builder.Services.AddScoped<GetCandidaturaByIdUseCase>();
+builder.Services.AddScoped<CreateCandidaturaUseCase>();
+builder.Services.AddScoped<UpdateCandidaturaUseCase>();
+builder.Services.AddScoped<DeleteCandidaturaUseCase>();
+builder.Services.AddScoped<GetStatsUseCase>();
+builder.Services.AddScoped<GetTimelineUseCase>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -28,7 +39,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
-// Route di default: Controller=Home, Action=Index
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Candidature}/{action=Index}/{id?}");

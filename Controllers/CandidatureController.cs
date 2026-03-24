@@ -1,78 +1,105 @@
 using JobTracker.Models;
+using JobTracker.UseCases;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Controllers
 {
+    /// <summary>
+    /// Gestisce tutte le operazioni per le candidature di lavoro.
+    /// Segue la Clean Architecture: il Controller fa solo routing e orchestrazione,
+    /// la logica di business è nei UseCases, l'accesso ai dati nel Repository.
+    /// </summary>
     public class CandidatureController : Controller
     {
-        private readonly AppDbContext _db;
+        private readonly GetAllCandidatureUseCase _getAll;
+        private readonly GetCandidaturaByIdUseCase _getById;
+        private readonly CreateCandidaturaUseCase _create;
+        private readonly UpdateCandidaturaUseCase _update;
+        private readonly DeleteCandidaturaUseCase _delete;
+        private readonly GetStatsUseCase _stats;
+        private readonly GetTimelineUseCase _timeline;
 
-        // Il DbContext viene iniettato automaticamente da ASP.NET (principio D - SOLID)
-        public CandidatureController(AppDbContext db)
+        /// <summary>
+        /// Tutti gli UseCases vengono iniettati tramite Dependency Injection.
+        /// Il Controller non sa come funzionano internamente — li usa e basta.
+        /// </summary>
+        public CandidatureController(
+            GetAllCandidatureUseCase getAll,
+            GetCandidaturaByIdUseCase getById,
+            CreateCandidaturaUseCase create,
+            UpdateCandidaturaUseCase update,
+            DeleteCandidaturaUseCase delete,
+            GetStatsUseCase stats,
+            GetTimelineUseCase timeline)
         {
-            _db = db;
+            _getAll = getAll;
+            _getById = getById;
+            _create = create;
+            _update = update;
+            _delete = delete;
+            _stats = stats;
+            _timeline = timeline;
         }
 
-        // GET: /Candidature
+        // ==================== VIEWS ====================
+
+        /// <summary>
+        /// Mostra la lista delle candidature con filtri opzionali e contatori per la dashboard.
+        /// </summary>
         public async Task<IActionResult> Index(string? stato, string? cerca)
         {
-            var query = _db.Candidature.AsQueryable();
-
-            // Filtro per stato
-            if (!string.IsNullOrEmpty(stato))
-                query = query.Where(c => c.Stato == stato);
-
-            // Ricerca per azienda o ruolo
-            if (!string.IsNullOrEmpty(cerca))
-                query = query.Where(c => 
-                    c.Azienda.Contains(cerca) || 
-                    c.Ruolo.Contains(cerca));
-
-            var candidature = await query
-                .OrderByDescending(c => c.DataCandidatura)
-                .ToListAsync();
+            var candidature = await _getAll.ExecuteAsync(stato, cerca);
+            var stats = await _stats.ExecuteAsync();
 
             ViewBag.Stato = stato;
             ViewBag.Cerca = cerca;
-            ViewBag.Totale = await _db.Candidature.CountAsync();
-            ViewBag.Inviate = await _db.Candidature.CountAsync(c => c.Stato == "Inviata");
-            ViewBag.Colloqui = await _db.Candidature.CountAsync(c => c.Stato == "Colloquio");
-            ViewBag.Rifiutate = await _db.Candidature.CountAsync(c => c.Stato == "Rifiutata");
+            ViewBag.Totale = stats.Totale;
+            ViewBag.Inviate = stats.Inviate;
+            ViewBag.Colloqui = stats.Colloqui;
+            ViewBag.Rifiutate = stats.Rifiutate;
 
             return View(candidature);
         }
 
-        // GET: /Candidature/Create
+        /// <summary>
+        /// Restituisce il form vuoto per creare una nuova candidatura.
+        /// </summary>
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /Candidature/Create
+        /// <summary>
+        /// Valida e salva una nuova candidatura.
+        /// In caso di successo reindirizza alla lista, altrimenti mostra il form con gli errori.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Candidatura candidatura)
         {
             if (ModelState.IsValid)
             {
-                _db.Candidature.Add(candidatura);
-                await _db.SaveChangesAsync();
+                await _create.ExecuteAsync(candidatura);
                 TempData["Success"] = "Candidatura aggiunta con successo!";
                 return RedirectToAction(nameof(Index));
             }
             return View(candidatura);
         }
 
-        // GET: /Candidature/Edit/5
+        /// <summary>
+        /// Restituisce il form precompilato per modificare una candidatura esistente.
+        /// </summary>
         public async Task<IActionResult> Edit(int id)
         {
-            var candidatura = await _db.Candidature.FindAsync(id);
+            var candidatura = await _getById.ExecuteAsync(id);
             if (candidatura == null) return NotFound();
             return View(candidatura);
         }
 
-        // POST: /Candidature/Edit/5
+        /// <summary>
+        /// Valida e applica le modifiche a una candidatura esistente.
+        /// Controlla che l'ID nella route corrisponda a quello nel model (protezione da manomissione).
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Candidatura candidatura)
@@ -81,35 +108,60 @@ namespace JobTracker.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Candidature.Update(candidatura);
-                await _db.SaveChangesAsync();
+                var success = await _update.ExecuteAsync(id, candidatura);
+                if (!success) return NotFound();
+
                 TempData["Success"] = "Candidatura aggiornata!";
                 return RedirectToAction(nameof(Index));
             }
             return View(candidatura);
         }
 
-        // POST: /Candidature/Delete/5
+        /// <summary>
+        /// Elimina definitivamente una candidatura tramite ID.
+        /// Usa POST per impedire eliminazioni accidentali via URL.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var candidatura = await _db.Candidature.FindAsync(id);
-            if (candidatura != null)
-            {
-                _db.Candidature.Remove(candidatura);
-                await _db.SaveChangesAsync();
-                TempData["Success"] = "Candidatura eliminata.";
-            }
+            await _delete.ExecuteAsync(id);
+            TempData["Success"] = "Candidatura eliminata.";
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Candidature/Details/5
+        /// <summary>
+        /// Mostra la vista di dettaglio in sola lettura per una singola candidatura.
+        /// </summary>
         public async Task<IActionResult> Details(int id)
         {
-            var candidatura = await _db.Candidature.FindAsync(id);
+            var candidatura = await _getById.ExecuteAsync(id);
             if (candidatura == null) return NotFound();
             return View(candidatura);
+        }
+
+        // ==================== API JSON PER HIGHCHARTS ====================
+
+        /// <summary>
+        /// API JSON — restituisce i contatori per stato per il grafico donut Highcharts.
+        /// Chiamato via fetch() da charts.js.
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> ApiStats()
+        {
+            var stats = await _stats.ExecuteAsync();
+            return Json(new { perStato = stats.PerStato });
+        }
+
+        /// <summary>
+        /// API JSON — restituisce le candidature raggruppate per data per il grafico area Highcharts.
+        /// Chiamato via fetch() da charts.js.
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> ApiTimeline()
+        {
+            var timeline = await _timeline.ExecuteAsync();
+            return Json(new { date = timeline.Date, conteggi = timeline.Conteggi });
         }
     }
 }
