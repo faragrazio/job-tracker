@@ -1,0 +1,20 @@
+# Build
+bin/
+obj/
+
+# Configurazione locale con password
+appsettings.Development.json
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Log
+*.log

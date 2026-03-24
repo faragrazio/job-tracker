@@ -1,0 +1,151 @@
+@model IEnumerable<JobTracker.Models.Candidatura>
+@{
+    ViewData["Title"] = "Le mie Candidature";
+}
+
+<div class="container-fluid py-4">
+    
+    <!-- Header con statistiche -->
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h2 class="fw-bold text-dark">🎯 Job Tracker</h2>
+            <a asp-action="Create" class="btn btn-primary px-4">
+                <i class="bi bi-plus-lg"></i> Nuova Candidatura
+            </a>
+        </div>
+    </div>
+
+    <!-- Cards statistiche -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="fs-1 fw-bold text-primary">@ViewBag.Totale</div>
+                <div class="text-muted small">Totale</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="fs-1 fw-bold text-info">@ViewBag.Inviate</div>
+                <div class="text-muted small">Inviate</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="fs-1 fw-bold text-success">@ViewBag.Colloqui</div>
+                <div class="text-muted small">Colloqui</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="fs-1 fw-bold text-danger">@ViewBag.Rifiutate</div>
+                <div class="text-muted small">Rifiutate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messaggio successo -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            ✅ @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Filtri -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-2 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label small text-muted">Cerca azienda o ruolo</label>
+                    <input type="text" name="cerca" value="@ViewBag.Cerca" 
+                           class="form-control" placeholder="es. Microsoft, Developer...">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">Filtra per stato</label>
+                    <select name="stato" class="form-select">
+                        <option value="">Tutti gli stati</option>
+                        @foreach (var s in new[] { "Inviata", "CV Visualizzato", "Colloquio", "Offerta", "Rifiutata", "Chiusa" })
+                        {
+                            <option value="@s" selected="@(ViewBag.Stato == s)">@s</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">Filtra</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary flex-fill">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabella candidature -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5 text-muted">
+                    <div class="fs-1">📭</div>
+                    <p>Nessuna candidatura trovata.</p>
+                    <a asp-action="Create" class="btn btn-primary">Aggiungi la prima</a>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Azienda</th>
+                                <th>Ruolo</th>
+                                <th>Città</th>
+                                <th>Modalità</th>
+                                <th>Data</th>
+                                <th>Stato</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@c.Azienda</td>
+                                    <td>@c.Ruolo</td>
+                                    <td>@c.Citta</td>
+                                    <td>@c.Modalita</td>
+                                    <td>@c.DataCandidatura.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @{
+                                            var badgeClass = c.Stato switch {
+                                                "Inviata" => "bg-primary",
+                                                "CV Visualizzato" => "bg-warning text-dark",
+                                                "Colloquio" => "bg-success",
+                                                "Offerta" => "bg-info text-dark",
+                                                "Rifiutata" => "bg-danger",
+                                                "Chiusa" => "bg-secondary",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @badgeClass">@c.Stato</span>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@c.Id" 
+                                           class="btn btn-sm btn-outline-secondary">👁</a>
+                                        <a asp-action="Edit" asp-route-id="@c.Id" 
+                                           class="btn btn-sm btn-outline-primary">✏️</a>
+                                        <form asp-action="Delete" asp-route-id="@c.Id" 
+                                              method="post" class="d-inline"
+                                              onsubmit="return confirm('Eliminare questa candidatura?')">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">🗑</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
