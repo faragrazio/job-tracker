@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] — JobTracker</title>
 
+    <!-- Google Fonts — DM Sans: tipografia moderna e leggibile -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
@@ -16,7 +21,7 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
             <a class="navbar-brand" asp-controller="Candidature" asp-action="Index">
                 <i class="bi bi-briefcase-fill"></i> JobTracker
@@ -28,16 +33,16 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Candidature" asp-action="Index">
-                            <i class="bi bi-list-ul"></i> Candidature
+                            <i class="bi bi-grid-1x2-fill"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Candidature" asp-action="Create">
-                            <i class="bi bi-plus-lg"></i> Nuova
+                            <i class="bi bi-plus-circle"></i> Nuova
                         </a>
                     </li>
                 </ul>
-                <span class="navbar-text text-light">
+                <span class="navbar-text">
                     <i class="bi bi-person-circle"></i> Graziano Faraone
                 </span>
             </div>
@@ -45,21 +50,19 @@
     </nav>
 
     <!-- Contenuto principale -->
-    <main class="container pb-5">
+    <main class="container py-4">
         @RenderBody()
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light text-center py-3 mt-auto">
+    <footer class="footer-custom text-center">
         <div class="container">
-            <small>&copy; @DateTime.Now.Year JobTracker — Progetto portfolio di Graziano Faraone</small>
+            <small>&copy; @DateTime.Now.Year <strong>JobTracker</strong> — Progetto portfolio di <a href="https://github.com/faragrazio" target="_blank">Graziano Faraone</a></small>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Sezione per script aggiuntivi delle singole view -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

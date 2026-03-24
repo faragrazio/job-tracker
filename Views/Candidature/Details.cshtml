@@ -6,119 +6,118 @@
 
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-eye"></i> @Model.Azienda — @Model.Ruolo</h5>
+        <div class="card card-dettaglio">
+            <div class="card-header text-white d-flex justify-content-between align-items-center"
+                 style="background: linear-gradient(135deg, #6366f1, #818cf8);">
+                <h5 class="mb-0" style="font-family: var(--font-display); font-weight: 700;">
+                    <i class="bi bi-eye"></i> @Model.Azienda — @Model.Ruolo
+                </h5>
                 @{
                     var badgeClass = Model.Stato switch
                     {
-                        "Inviata" => "bg-info",
-                        "Visualizzata" => "bg-secondary",
-                        "Colloquio" => "bg-warning text-dark",
-                        "Rifiutata" => "bg-danger",
-                        "Offerta" => "bg-success",
+                        "Inviata" => "badge-inviata",
+                        "Visualizzata" => "badge-visualizzata",
+                        "Colloquio" => "badge-colloquio",
+                        "Rifiutata" => "badge-rifiutata",
+                        "Offerta" => "badge-offerta",
                         _ => "bg-light text-dark"
                     };
                 }
-                <span class="badge @badgeClass fs-6">@Model.Stato</span>
+                <span class="badge badge-stato @badgeClass" style="font-size: 0.85rem;">@Model.Stato</span>
             </div>
-            <div class="card-body">
+            <div class="card-body p-4">
 
-                <!-- Informazioni principali -->
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <h6 class="text-muted">Azienda</h6>
-                        <p class="fs-5"><strong>@Model.Azienda</strong></p>
+                        <div class="detail-label">Azienda</div>
+                        <div class="detail-value"><strong>@Model.Azienda</strong></div>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="text-muted">Ruolo</h6>
-                        <p class="fs-5">@Model.Ruolo</p>
+                        <div class="detail-label">Ruolo</div>
+                        <div class="detail-value">@Model.Ruolo</div>
                     </div>
                 </div>
 
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <h6 class="text-muted">Città</h6>
-                        <p>@(Model.Citta ?? "—")</p>
+                        <div class="detail-label">Città</div>
+                        <div class="detail-value">@(Model.Citta ?? "—")</div>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="text-muted">Modalità</h6>
-                        <p>@(Model.Modalita ?? "—")</p>
+                        <div class="detail-label">Modalità</div>
+                        <div class="detail-value">@(Model.Modalita ?? "—")</div>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="text-muted">Fonte</h6>
-                        <p>@(Model.Fonte ?? "—")</p>
+                        <div class="detail-label">Fonte</div>
+                        <div class="detail-value">@(Model.Fonte ?? "—")</div>
                     </div>
                 </div>
 
-                <hr />
+                <hr style="border-color: var(--border-light);" />
 
-                <!-- Date -->
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <h6 class="text-muted">Data candidatura</h6>
-                        <p>@Model.DataCandidatura.ToString("dd/MM/yyyy")</p>
+                        <div class="detail-label">Data candidatura</div>
+                        <div class="detail-value">@Model.DataCandidatura.ToString("dd/MM/yyyy")</div>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="text-muted">Data risposta</h6>
-                        <p>@(Model.DataRisposta?.ToString("dd/MM/yyyy") ?? "—")</p>
+                        <div class="detail-label">Data risposta</div>
+                        <div class="detail-value">@(Model.DataRisposta?.ToString("dd/MM/yyyy") ?? "—")</div>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="text-muted">Data colloquio</h6>
-                        <p>@(Model.DataColloquio?.ToString("dd/MM/yyyy") ?? "—")</p>
+                        <div class="detail-label">Data colloquio</div>
+                        <div class="detail-value">@(Model.DataColloquio?.ToString("dd/MM/yyyy") ?? "—")</div>
                     </div>
                 </div>
 
-                <hr />
+                <hr style="border-color: var(--border-light);" />
 
-                <!-- Dettagli tecnici -->
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <h6 class="text-muted">RAL indicata</h6>
-                        <p>@(Model.RALIndicata ?? "—")</p>
+                        <div class="detail-label">RAL indicata</div>
+                        <div class="detail-value">@(Model.RALIndicata ?? "—")</div>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="text-muted">Stack richiesto</h6>
-                        <p>@(Model.StackRichiesto ?? "—")</p>
+                        <div class="detail-label">Stack richiesto</div>
+                        <div class="detail-value">@(Model.StackRichiesto ?? "—")</div>
                     </div>
                 </div>
 
-                <!-- Link offerta -->
                 @if (!string.IsNullOrEmpty(Model.LinkOfferta))
                 {
                     <div class="mb-4">
-                        <h6 class="text-muted">Link offerta</h6>
-                        <a href="@Model.LinkOfferta" target="_blank" class="text-decoration-none">
+                        <div class="detail-label">Link offerta</div>
+                        <a href="@Model.LinkOfferta" target="_blank" class="text-decoration-none"
+                           style="color: var(--primary);">
                             <i class="bi bi-box-arrow-up-right"></i> @Model.LinkOfferta
                         </a>
                     </div>
                 }
 
-                <!-- Note -->
                 @if (!string.IsNullOrEmpty(Model.Note))
                 {
                     <div class="mb-4">
-                        <h6 class="text-muted">Note</h6>
-                        <div class="bg-light rounded p-3">
+                        <div class="detail-label">Note</div>
+                        <div class="rounded p-3" style="background: var(--bg-main);">
                             @Model.Note
                         </div>
                     </div>
                 }
 
-                <!-- Pulsanti azione -->
-                <hr />
+                <hr style="border-color: var(--border-light);" />
+
                 <div class="d-flex justify-content-between">
-                    <a asp-action="Index" class="btn btn-outline-secondary">
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-arrow-left"></i> Torna alla lista
                     </a>
-                    <div>
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">
                             <i class="bi bi-pencil"></i> Modifica
                         </a>
                         <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
                               onsubmit="return confirm('Sei sicuro di voler eliminare questa candidatura?')">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-danger">
+                            <button type="submit" class="btn btn-danger btn-sm">
                                 <i class="bi bi-trash"></i> Elimina
                             </button>
                         </form>

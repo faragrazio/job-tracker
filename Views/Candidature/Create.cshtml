@@ -6,15 +6,14 @@
 
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-plus-lg"></i> Nuova candidatura</h5>
+        <div class="card card-form">
+            <div class="card-header text-white" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                <h5><i class="bi bi-plus-circle"></i> Nuova candidatura</h5>
             </div>
             <div class="card-body">
                 <form asp-action="Create" method="post">
                     @Html.AntiForgeryToken()
 
-                    <!-- Riga 1: Azienda + Ruolo -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Azienda" class="form-label">Azienda *</label>
@@ -28,7 +27,6 @@
                         </div>
                     </div>
 
-                    <!-- Riga 2: Città + Modalità -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Citta" class="form-label">Città</label>
@@ -45,7 +43,6 @@
                         </div>
                     </div>
 
-                    <!-- Riga 3: Fonte + Data candidatura -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Fonte" class="form-label">Fonte</label>
@@ -66,7 +63,6 @@
                         </div>
                     </div>
 
-                    <!-- Riga 4: Stato + RAL -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Stato" class="form-label">Stato</label>
@@ -84,21 +80,18 @@
                         </div>
                     </div>
 
-                    <!-- Riga 5: Stack richiesto -->
                     <div class="mb-3">
                         <label asp-for="StackRichiesto" class="form-label">Stack richiesto</label>
-                        <input asp-for="StackRichiesto" class="form-control" 
+                        <input asp-for="StackRichiesto" class="form-control"
                                placeholder="Es. C#, ASP.NET MVC, JavaScript, MySQL">
                     </div>
 
-                    <!-- Riga 6: Link offerta -->
                     <div class="mb-3">
                         <label asp-for="LinkOfferta" class="form-label">Link offerta</label>
-                        <input asp-for="LinkOfferta" type="url" class="form-control" 
+                        <input asp-for="LinkOfferta" type="url" class="form-control"
                                placeholder="https://...">
                     </div>
 
-                    <!-- Riga 7: Date risposta e colloquio -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="DataRisposta" class="form-label">Data risposta</label>
@@ -110,16 +103,14 @@
                         </div>
                     </div>
 
-                    <!-- Riga 8: Note -->
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label asp-for="Note" class="form-label">Note</label>
-                        <textarea asp-for="Note" class="form-control" rows="3" 
+                        <textarea asp-for="Note" class="form-control" rows="3"
                                   placeholder="Appunti, contatti, impressioni..."></textarea>
                     </div>
 
-                    <!-- Pulsanti -->
                     <div class="d-flex justify-content-between">
-                        <a asp-action="Index" class="btn btn-outline-secondary">
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-arrow-left"></i> Torna alla lista
                         </a>
                         <button type="submit" class="btn btn-success">

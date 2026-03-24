@@ -1,40 +1,40 @@
 @model List<JobTracker.Models.Candidatura>
 
 @{
-    ViewData["Title"] = "Le mie candidature";
+    ViewData["Title"] = "Dashboard";
 }
 
-<!-- ==================== CARD RIASSUNTIVE DASHBOARD ==================== -->
+<!-- ==================== CARD RIASSUNTIVE ==================== -->
 <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-        <div class="card card-dashboard text-white bg-primary">
-            <div class="card-body text-center">
-                <h5 class="card-title">Totali</h5>
-                <h2>@ViewBag.Totale</h2>
+    <div class="col-6 col-md-3 animate-in">
+        <div class="card card-dashboard card-totali text-white">
+            <div class="card-body">
+                <div class="card-label">Totali</div>
+                <div class="card-number">@ViewBag.Totale</div>
             </div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="card card-dashboard text-white bg-info">
-            <div class="card-body text-center">
-                <h5 class="card-title">Inviate</h5>
-                <h2>@ViewBag.Inviate</h2>
+    <div class="col-6 col-md-3 animate-in">
+        <div class="card card-dashboard card-inviate text-white">
+            <div class="card-body">
+                <div class="card-label">Inviate</div>
+                <div class="card-number">@ViewBag.Inviate</div>
             </div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="card card-dashboard text-white bg-warning">
-            <div class="card-body text-center">
-                <h5 class="card-title">Colloqui</h5>
-                <h2>@ViewBag.Colloqui</h2>
+    <div class="col-6 col-md-3 animate-in">
+        <div class="card card-dashboard card-colloqui text-white">
+            <div class="card-body">
+                <div class="card-label">Colloqui</div>
+                <div class="card-number">@ViewBag.Colloqui</div>
             </div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="card card-dashboard text-white bg-danger">
-            <div class="card-body text-center">
-                <h5 class="card-title">Rifiutate</h5>
-                <h2>@ViewBag.Rifiutate</h2>
+    <div class="col-6 col-md-3 animate-in">
+        <div class="card card-dashboard card-rifiutate text-white">
+            <div class="card-body">
+                <div class="card-label">Rifiutate</div>
+                <div class="card-number">@ViewBag.Rifiutate</div>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
                 <i class="bi bi-pie-chart-fill"></i> Distribuzione per stato
             </div>
             <div class="card-body">
-                <div id="chart-stato" style="height: 280px;"></div>
+                <div id="chart-stato" style="height: 260px;"></div>
             </div>
         </div>
     </div>
@@ -58,20 +58,20 @@
                 <i class="bi bi-graph-up"></i> Candidature nel tempo
             </div>
             <div class="card-body">
-                <div id="chart-tempo" style="height: 280px;"></div>
+                <div id="chart-tempo" style="height: 260px;"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ==================== FILTRI E RICERCA ==================== -->
+<!-- ==================== FILTRI ==================== -->
 <div class="card card-filtri mb-4">
     <div class="card-body py-3">
         <form method="get" asp-action="Index" class="row g-2 align-items-end">
             <div class="col-md-4">
-                <label class="form-label">Filtra per stato</label>
+                <label class="form-label">Stato</label>
                 <select name="stato" class="form-select form-select-sm">
-                    <option value="">Tutti gli stati</option>
+                    <option value="">Tutti</option>
                     <option value="Inviata" selected="@(ViewBag.Stato == "Inviata")">Inviata</option>
                     <option value="Visualizzata" selected="@(ViewBag.Stato == "Visualizzata")">Visualizzata</option>
                     <option value="Colloquio" selected="@(ViewBag.Stato == "Colloquio")">Colloquio</option>
@@ -80,12 +80,12 @@
                 </select>
             </div>
             <div class="col-md-5">
-                <label class="form-label">Cerca per azienda o ruolo</label>
+                <label class="form-label">Cerca</label>
                 <input type="text" name="cerca" class="form-control form-control-sm"
-                       value="@ViewBag.Cerca" placeholder="Es. Microsoft, Backend Developer...">
+                       value="@ViewBag.Cerca" placeholder="Azienda o ruolo...">
             </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-primary btn-sm me-2">
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-sm">
                     <i class="bi bi-search"></i> Filtra
                 </button>
                 <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Reset</a>
@@ -94,35 +94,40 @@
     </div>
 </div>
 
-<!-- ==================== MESSAGGIO DI SUCCESSO ==================== -->
+<!-- ==================== MESSAGGIO SUCCESSO ==================== -->
 @if (TempData["Success"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["Success"]
+    <div class="alert alert-success-custom alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-1"></i> @TempData["Success"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
 
-<!-- ==================== PULSANTE AGGIUNGI + TABELLA ==================== -->
+<!-- ==================== TABELLA ==================== -->
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">Lista candidature</h5>
+    <h6 class="mb-0" style="font-weight: 700; color: var(--text-primary);">
+        <i class="bi bi-list-ul"></i> Candidature
+    </h6>
     <a asp-action="Create" class="btn btn-success btn-sm">
-        <i class="bi bi-plus-lg"></i> Nuova candidatura
+        <i class="bi bi-plus-lg"></i> Nuova
     </a>
 </div>
 
 @if (Model.Count == 0)
 {
-    <div class="alert alert-info">
-        Nessuna candidatura trovata. Clicca "Nuova candidatura" per aggiungerne una.
+    <div class="card card-tabella p-5 text-center">
+        <i class="bi bi-inbox" style="font-size: 3rem; color: var(--text-muted);"></i>
+        <p class="mt-3 mb-0" style="color: var(--text-secondary);">
+            Nessuna candidatura trovata. Inizia aggiungendone una!
+        </p>
     </div>
 }
 else
 {
     <div class="card card-tabella">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-dark">
+            <table class="table table-hover mb-0">
+                <thead>
                     <tr>
                         <th>Azienda</th>
                         <th>Ruolo</th>
@@ -139,22 +144,22 @@ else
                         <tr id="row-@c.Id">
                             <td><strong>@c.Azienda</strong></td>
                             <td>@c.Ruolo</td>
-                            <td>@c.Citta</td>
-                            <td>@c.Modalita</td>
+                            <td>@(c.Citta ?? "—")</td>
+                            <td>@(c.Modalita ?? "—")</td>
                             <td>@c.DataCandidatura.ToString("dd/MM/yyyy")</td>
                             <td>
                                 @{
                                     var badgeClass = c.Stato switch
                                     {
-                                        "Inviata" => "bg-info",
-                                        "Visualizzata" => "bg-secondary",
-                                        "Colloquio" => "bg-warning text-dark",
-                                        "Rifiutata" => "bg-danger",
-                                        "Offerta" => "bg-success",
+                                        "Inviata" => "badge-inviata",
+                                        "Visualizzata" => "badge-visualizzata",
+                                        "Colloquio" => "badge-colloquio",
+                                        "Rifiutata" => "badge-rifiutata",
+                                        "Offerta" => "badge-offerta",
                                         _ => "bg-light text-dark"
                                     };
                                 }
-                                <span class="badge @badgeClass">@c.Stato</span>
+                                <span class="badge badge-stato @badgeClass">@c.Stato</span>
                             </td>
                             <td class="text-end">
                                 <a asp-action="Details" asp-route-id="@c.Id"
@@ -179,15 +184,9 @@ else
     </div>
 }
 
-<!-- ==================== SCRIPT ==================== -->
 @section Scripts {
-    <!-- Highcharts CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.1/highcharts.min.js"></script>
-
-    <!-- File JS del progetto -->
     <script src="~/js/charts.js" asp-append-version="true"></script>
     <script src="~/js/candidature.js" asp-append-version="true"></script>
-
-    <!-- Token CSRF per le chiamate AJAX -->
     @Html.AntiForgeryToken()
 }
